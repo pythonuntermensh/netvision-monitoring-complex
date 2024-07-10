@@ -13,7 +13,7 @@ services:
       - rest
     environment:
       - DATASOURCE_URL=postgresql+pg8000://postgres:postgres@postgres/census
-      - OVERSEER_API_URL=http://localhost:8001
+      - OVERSEER_API_URL=http://overseer:8001
 
   overseer:
     container_name: overseer-api
@@ -24,10 +24,11 @@ services:
       - '8081:8001'
     depends_on:
       - postgres
+      - census
     networks:
       - rest
     environment:
-      - CENSUS_URL=http://localhost:8000
+      - CENSUS_URL=http://census:8000
       - CRON_INTERVAL=5
 
   postgres:

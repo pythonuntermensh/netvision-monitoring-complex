@@ -8,7 +8,6 @@ def update_statuses():
         # log smth
 
     statuses = get_statuses(cameras)
-    print(statuses)
     if statuses is None:
         return
         # log smth

@@ -2,7 +2,7 @@ from typing import Any
 
 import requests
 
-from config import CENSUS_URL, THORX_URL
+from config import CENSUS_URL
 
 
 def get_camera_list() -> Any:

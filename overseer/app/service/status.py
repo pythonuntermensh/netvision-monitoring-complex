@@ -3,7 +3,7 @@ from typing import Any
 import requests, json
 
 from type.camera_status_codes import CameraStatus
-from config import CENSUS_URL, THORX_URL
+from config import CENSUS_URL
 
 CAMERA_CHECK_PROTOCOL = "http://"
 
@@ -14,7 +14,7 @@ def get_statuses(cameras: list) -> Any:
         camera_to_status: dict = {"uuid": camera["uuid"]}
 
         try:
-            resp = requests.get(CAMERA_CHECK_PROTOCOL + camera.ip)
+            resp = requests.get(CAMERA_CHECK_PROTOCOL + camera["ip"], timeout=3)
             if resp.status_code != 200:
                 raise ConnectionError
 
