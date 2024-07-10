@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config.db import init_db
-from model import Group, Camera
 
 from web.routes import camera, group, status
 

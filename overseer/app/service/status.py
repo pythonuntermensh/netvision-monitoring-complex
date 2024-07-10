@@ -1,32 +1,36 @@
-from typing import Any
+from typing import Any, List
 
 import requests, json
 
-from type.camera_status_codes import CameraStatus
-from config import CENSUS_URL, THORX_URL
+from config import CAMERA_CHECK_PROTOCOL
+from dto.request import CameraIn
+from dto.response import CameraStatusOut
+from type import CameraStatus
+from exception import CensusUnavailable
+from config import CENSUS_URL
 
-CAMERA_CHECK_PROTOCOL = "http://"
 
-
-def get_statuses(cameras: list) -> Any:
-    result = []
+def get_statuses(cameras: List[CameraIn]) -> List[CameraStatusOut]:
+    result = list()
     for camera in cameras:
-        camera_to_status: dict = {"uuid": camera["uuid"]}
-
         try:
             resp = requests.get(CAMERA_CHECK_PROTOCOL + camera.ip)
             if resp.status_code != 200:
-                raise ConnectionError
+                raise ConnectionError()
 
-            camera_to_status["status"] = CameraStatus.OK.value
+            camera_to_status: CameraStatusOut = CameraStatusOut(uuid=camera["uuid"],
+                                                                status=CameraStatus.OK.value)
 
-        except Exception as err:
-            camera_to_status["status"] = CameraStatus.BAD.value
+        except Exception as err:  # Впадлу мне смотреть че там за ошибки, так что обобщим.
+            camera_to_status: CameraStatusOut = CameraStatusOut(uuid=camera["uuid"],
+                                                                status=CameraStatus.BAD.value)
 
         result.append(camera_to_status)
     return result
 
 
-def send_statuses(cameras_to_statuses: list) -> bool:
-    response = requests.post(CENSUS_URL + "/statuses", data=json.dumps(cameras_to_statuses))
-    return response.status_code == 200
+def send_statuses(cameras_to_statuses: List[CameraStatusOut]) -> None:
+    response = requests.post(CENSUS_URL + "/statuses", data=cameras_to_statuses)
+    print(response.request.body)
+    if not response.status_code == 200:
+        raise CensusUnavailable("Couldn't sent new statuses request to the census server")
