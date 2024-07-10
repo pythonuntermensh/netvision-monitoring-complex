@@ -20,7 +20,8 @@ async def root():
 
 if __name__ == "__main__":
     if scheduler.state == 0:
-        scheduler.start()
+        pass
+    scheduler.start()
 
     import uvicorn
 

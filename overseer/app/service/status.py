@@ -14,7 +14,8 @@ def get_statuses(cameras: List[CameraIn]) -> List[CameraStatusOut]:
     result = list()
     for camera in cameras:
         try:
-            resp = requests.get(CAMERA_CHECK_PROTOCOL + camera.ip + camera.port, timeout=CAMERA_CHECK_TIMEOUT)
+            print("Checking status for", CAMERA_CHECK_PROTOCOL + camera.ip)
+            resp = requests.get(CAMERA_CHECK_PROTOCOL + camera.ip, timeout=3)
             if resp.status_code != 200:
                 raise ConnectionError()
 

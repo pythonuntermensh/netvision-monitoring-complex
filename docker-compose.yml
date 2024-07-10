@@ -2,8 +2,6 @@ version: '3'
 services:
   census:
     container_name: census-api
-    build:
-      context: census
     image: optionalpidaras/census-api-image
     ports:
       - '8080:8000'
@@ -16,8 +14,6 @@ services:
 
   overseer:
     container_name: overseer-api
-    build:
-      context: overseer
     image: optionalpidaras/overseer-api-image
     ports:
       - '8081:8001'
