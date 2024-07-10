@@ -11,7 +11,7 @@ class Camera(Model):
 
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)
     ip: Optional[str] = Column(String, default="192.168.0.1")
-    port: Optional[int] = Column(Integer, default=0)
+    port: Optional[int] = Column(Integer, default=80)
     login: Optional[str] = Column(String, default="")
     password: Optional[str] = Column(String, default="")
     status: Optional[int] = Column(Integer, default=0)

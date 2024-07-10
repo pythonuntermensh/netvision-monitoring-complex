@@ -7,14 +7,14 @@ from dto.request import CameraIn
 from dto.response import CameraStatusOut
 from type import CameraStatus
 from exception import CensusUnavailable
-from config import CENSUS_URL
+from config import CENSUS_URL, CAMERA_CHECK_TIMEOUT
 
 
 def get_statuses(cameras: List[CameraIn]) -> List[CameraStatusOut]:
     result = list()
     for camera in cameras:
         try:
-            resp = requests.get(CAMERA_CHECK_PROTOCOL + camera.ip)
+            resp = requests.get(CAMERA_CHECK_PROTOCOL + camera.ip + camera.port, timeout=CAMERA_CHECK_TIMEOUT)
             if resp.status_code != 200:
                 raise ConnectionError()
 
