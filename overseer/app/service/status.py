@@ -30,7 +30,7 @@ def get_statuses(cameras: List[CameraIn]) -> List[CameraStatusOut]:
 
 
 def send_statuses(cameras_to_statuses: List[CameraStatusOut]) -> None:
-    response = requests.post(CENSUS_URL + "/statuses", data=cameras_to_statuses)
-    print(response.request.body)
+    data_to_send = [x.to_dict() for x in cameras_to_statuses]
+    response = requests.post(CENSUS_URL + "/statuses/", data=json.dumps(data_to_send))
     if not response.status_code == 200:
         raise CensusUnavailable("Couldn't sent new statuses request to the census server")

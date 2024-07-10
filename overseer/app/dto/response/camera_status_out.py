@@ -1,3 +1,5 @@
+from typing import Dict, Any
+
 from pydantic import BaseModel
 from uuid import UUID
 
@@ -5,3 +7,6 @@ from uuid import UUID
 class CameraStatusOut(BaseModel):
     uuid: UUID
     status: int
+
+    def to_dict(self) -> Dict[str, Any]:
+        return {"uuid": str(self.uuid), "status": self.status}
