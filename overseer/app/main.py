@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from cron.jobs import scheduler
 
+
 app = FastAPI()
 
 app.add_middleware(

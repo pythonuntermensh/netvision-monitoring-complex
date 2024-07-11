@@ -2,11 +2,11 @@ from pydantic import BaseModel
 from uuid import UUID
 
 
-class CameraDetailedOut(BaseModel):
+class ComplexOut(BaseModel):
     uuid: UUID
+    name: str
     ip: str
     port: int
     login: str
     password: str
-    status: int
     group_uuid: UUID

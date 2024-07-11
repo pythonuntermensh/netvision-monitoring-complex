@@ -1,2 +1,3 @@
-from . import camera
-from . import group
+from .camera import CameraRepository
+from .group import GroupRepository
+from .complex import ComplexRepository

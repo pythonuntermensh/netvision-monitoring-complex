@@ -1,18 +1,16 @@
-from service import get_camera_list, get_statuses, send_statuses
+import logging
+from service import get_camera_list, get_statuses, send_statuses, get_complex_list
+
+
+logger = logging.getLogger('overseer_default')
 
 
 def update_statuses():
     cameras = get_camera_list()
-    if cameras is None:
-        return
-        # log smth
+    complexes = get_complex_list()
 
-    statuses = get_statuses(cameras)
-    print(statuses)
-    if statuses is None:
+    statuses = get_statuses(cameras, complexes)
+    if len(statuses) < 1:
         return
-        # log smth
 
-    if not send_statuses(statuses):
-        pass
-        # log smth
+    send_statuses(statuses)
