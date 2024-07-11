@@ -7,55 +7,61 @@ from sqlmodel import select
 from sqlmodel import Session
 
 from model import Camera
-from dto.request import CameraCreate, StatusesUpdate
+from dto.request import StatusesUpdate
 from config.db import get_session
 
 
-def get_cameras(session: Session = Depends(get_session)) -> List[Camera]:
-    result = session.scalars(select(Camera)).all()
-    return [Camera(uuid=camera.uuid,
-                   ip=camera.ip,
-                   port=camera.port,
-                   login=camera.login,
-                   password=camera.password,
-                   status=camera.status,
-                   group_uuid=camera.group_uuid) for camera in result]
+class CameraRepository:
+    def get_cameras(self) -> List[Camera]:
+        session: Session = next(get_session())
+        result = session.scalars(select(Camera)).all()
+        session.close()
+        return [Camera(uuid=camera.uuid,
+                       url=camera.url,
+                       id=camera.id,
+                       description=camera.description,
+                       active=camera.active,
+                       status=camera.status,
+                       complex_uuid=camera.complex_uuid) for camera in result]
 
+    def get_camera_by_id(self, camera_id: uuid.UUID) -> Camera:
+        session: Session = next(get_session())
+        result = session.get(Camera, camera_id)
+        session.close()
+        return result
 
-def get_camera_by_id(camera_id: uuid.UUID, session: Session = Depends(get_session)) -> Camera:
-    result = session.get(Camera, camera_id)
-    return result
+    def create_camera(self, camera_create: Camera) -> Camera:
+        session: Session = next(get_session())
+        new_camera = Camera(description=camera_create.description,
+                            url=camera_create.url,
+                            id=camera_create.id,
+                            status=camera_create.status,
+                            active=camera_create.active,
+                            complex_uuid=camera_create.complex_uuid)
 
-
-def create_camera(camera_create: CameraCreate, session: Session = Depends(get_session)) -> Camera:
-    new_camera = Camera(ip=camera_create.ip,
-                        port=camera_create.port,
-                        login=camera_create.login,
-                        password=camera_create.password,
-                        group_uuid=camera_create.group_uuid)
-
-    session.add(new_camera)
-    session.commit()
-    session.refresh(new_camera)
-
-    return new_camera
-
-
-def delete_camera_by_id(camera_id: uuid.UUID, session: Session = Depends(get_session)) -> bool:
-    result = session.get(Camera, camera_id)
-
-    if result is None:
-        return False
-
-    session.delete(result)
-    session.commit()
-    return True
-
-
-def update_cameras_statuses(cameras_to_statuses: List[StatusesUpdate], session: Session = Depends(get_session)) -> None:
-    for pair in cameras_to_statuses:
-        camera = session.get(Camera, pair.uuid)
-        camera.status = pair.status
+        session.add(new_camera)
         session.commit()
+        session.refresh(new_camera)
+        session.close()
 
+        return new_camera
 
+    def delete_camera_by_id(self, camera_id: uuid.UUID) -> bool:
+        session: Session = next(get_session())
+        result = session.get(Camera, camera_id)
+
+        if result is None:
+            return False
+
+        session.delete(result)
+        session.commit()
+        session.close()
+        return True
+
+    def update_cameras_statuses(self, cameras_to_statuses: List[StatusesUpdate]) -> None:
+        session: Session = next(get_session())
+        for pair in cameras_to_statuses:
+            camera = session.get(Camera, pair.uuid)
+            camera.status = pair.status
+            session.commit()
+        session.close()

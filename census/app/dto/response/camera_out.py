@@ -4,7 +4,9 @@ from uuid import UUID
 
 class CameraOut(BaseModel):
     uuid: UUID
-    ip: str
-    port: int
+    description: str
+    id: int
+    url: str
     status: int
-    group_uuid: UUID
+    active: bool
+    complex_uuid: UUID

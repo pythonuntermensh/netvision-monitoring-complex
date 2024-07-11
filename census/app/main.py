@@ -2,9 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from config.db import init_db
-from model import Group, Camera
 
-from web.routes import camera, group, status
+from web.routes import camera, group, status, complex
 
 app = FastAPI()
 
@@ -19,6 +18,7 @@ app.add_middleware(
 app.include_router(camera.router)
 app.include_router(group.router)
 app.include_router(status.router)
+app.include_router(complex.router)
 
 
 @app.on_event("startup")

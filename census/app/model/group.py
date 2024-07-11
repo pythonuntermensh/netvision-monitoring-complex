@@ -11,4 +11,4 @@ class Group(Model):
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)
     name: str = Column(String, default="")
 
-    cameras = relationship("Camera", back_populates="group", cascade="delete")
+    complexes = relationship("Complex", back_populates="group", cascade="delete")

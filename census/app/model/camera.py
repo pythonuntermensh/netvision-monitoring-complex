@@ -1,7 +1,7 @@
 from uuid import uuid4
 
 from typing import Optional
-from sqlalchemy import Column, Integer, String, ForeignKey, UUID
+from sqlalchemy import Column, Integer, String, ForeignKey, UUID, Boolean
 from sqlalchemy.orm import relationship
 from .models import Model
 
@@ -10,11 +10,11 @@ class Camera(Model):
     __tablename__ = 'camera'
 
     uuid: UUID = Column(UUID, default=uuid4, nullable=False, primary_key=True)
-    ip: Optional[str] = Column(String, default="192.168.0.1")
-    port: Optional[int] = Column(Integer, default=0)
-    login: Optional[str] = Column(String, default="")
-    password: Optional[str] = Column(String, default="")
+    id: Optional[int] = Column(Integer, default=0)
+    description: Optional[str] = Column(String, default="")
+    url: Optional[str] = Column(String, default="192.168.0.1")
     status: Optional[int] = Column(Integer, default=0)
-    group_uuid: UUID = Column(UUID, ForeignKey("group.uuid"), nullable=False, index=True)
+    active: Optional[bool] = Column(Boolean, default=False)
+    complex_uuid: UUID = Column(UUID, ForeignKey("complex.uuid"), nullable=False, index=True)
 
-    group = relationship("Group", back_populates="cameras")
+    complex = relationship("Complex", back_populates="cameras")
